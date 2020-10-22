@@ -2,6 +2,9 @@ package co.johancas.nuvu.servicios;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -22,21 +25,25 @@ import co.johancas.nuvu.utilidades.Constantes;
 @Produces({MediaType.APPLICATION_JSON})
 public class ServiceLogin {
 	
-	@GET
+	private static Logger LOGGER = Logger.getLogger("ServiceLogin");
+	
+	@POST
 	@Path("/login")
 	public Response login(@Context HttpServletRequest request, Usuario usuario) {
 		Autenticacion auth = new Autenticacion();
 		usuario = auth.autenticar(usuario);
-		if (!(boolean) request.getSession().getAttribute(Constantes.USUARIO_VALIDO) || !usuario.isActivo()) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity(usuario).build();
+		LOGGER.log(Level.INFO, usuario + "");
+		boolean isValido = (boolean) request.getSession().getAttribute(Constantes.USUARIO_VALIDO); 
+		if (!isValido || !usuario.isActivo()) {
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 		request.getSession().setAttribute(Constantes.USUARIO_AUTORIZADO, usuario);
+		LOGGER.log(Level.INFO, "SET USUARIO TO SESSION...");
 		request.getSession().setAttribute(Constantes.USUARIO_VALIDO, Boolean.TRUE);
 		return Response.status(Response.Status.OK).entity(usuario).build();
 	}
 	
 	@GET
-	@Path("/allLogins")
 	public Response allLogins(@Context HttpServletRequest request) {
 		if (!((Boolean) request.getSession().getAttribute(Constantes.USUARIO_VALIDO)))
 			return Response.status(Response.Status.UNAUTHORIZED).build();

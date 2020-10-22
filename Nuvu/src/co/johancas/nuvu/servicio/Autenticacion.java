@@ -2,22 +2,27 @@ package co.johancas.nuvu.servicio;
 
 import java.util.Date;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import co.johancas.nuvu.core.AGestorArchivos;
 import co.johancas.nuvu.core.ArchivoUsuarios;
 import co.johancas.nuvu.modelo.Usuario;
 import co.johancas.nuvu.utilidades.AES;
 
 public class Autenticacion {
+	
+	private static Logger LOGGER = Logger.getLogger("Autenticacion");
 
 	public Usuario autenticar(Usuario usuario) {
 		if (usuario == null) {
 			return noLogin();
 		}
+		LOGGER.log(Level.INFO, usuario.toString());
 		AGestorArchivos archivo = new ArchivoUsuarios();
 		Map<String, Object> usuarios = null;
 		try {
 			 usuarios = archivo.getEntidades();
+			 LOGGER.log(Level.INFO, usuarios.toString());
 			 if (usuarios.containsKey(usuario.getLogin())) {
 				usuario = (Usuario) usuarios.get(usuario.getLogin());
 				usuario.setUltimoLogin(new Date());
