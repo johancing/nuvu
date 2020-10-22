@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<display-name>Nuvu</display-name>
+	<servlet>
+		<servlet-name>ServicesNuvu</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer
+		</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>co.johancas.nuvu</param-value>
+		</init-param>
+		<init-param>
+			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ServicesNuvu</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+	<filter>
+		<filter-name>autorizador</filter-name>
+		<filter-class>co.johancas.nuvu.aplicacion.Autorizador</filter-class>
+		<load-on-startup>1</load-on-startup>
+	</filter>
+	<filter-mapping>
+		<filter-name>autorizador</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+</web-app>
